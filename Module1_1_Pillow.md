@@ -1,15 +1,17 @@
 # 模組 1-1：Pillow (PIL) — 影像處理基礎
 
-<img width="1814" height="901" alt="image" src="https://github.com/user-attachments/assets/d1a1030d-f033-40e1-bdc6-8cb572676351" />
-<img width="1826" height="655" alt="image" src="https://github.com/user-attachments/assets/58146b1b-1919-4263-af1f-59772a856a76" />
+## 📌 為什麼工管系要學影像處理？
 
+在智慧製造中，AOI（自動光學檢測）是品質管制的第一道防線。當相機拍攝到零件後，電腦需要透過**影像前處理**強化瑕疵特徵，才能讓後續的 AI 辨識更準確。Pillow 就是 Python 中最直覺的影像處理工具。
 > **學習目標**：理解影像作為「數字矩陣」的本質，掌握工業影像前處理的核心技術。
 
 ---
 
-## 📌 為什麼工管系要學影像處理？
+<img width="1814" height="901" alt="image" src="https://github.com/user-attachments/assets/d1a1030d-f033-40e1-bdc6-8cb572676351" />
 
-在智慧製造中，AOI（自動光學檢測）是品質管制的第一道防線。當相機拍攝到零件後，電腦需要透過**影像前處理**強化瑕疵特徵，才能讓後續的 AI 辨識更準確。Pillow 就是 Python 中最直覺的影像處理工具。
+---
+
+<img width="1826" height="655" alt="image" src="https://github.com/user-attachments/assets/58146b1b-1919-4263-af1f-59772a856a76" />
 
 ---
 
