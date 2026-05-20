@@ -19,7 +19,8 @@ pip install Pillow
 ---
 
 ## 準備圖片：模擬生成
-```
+
+```python
 """
 gen_defect_image.py
 ====================
@@ -210,7 +211,6 @@ draw.text((10, H-18), footer, font=font_title, fill=(35, 48, 65))
 output_path = "defect_part.png"
 img.save(output_path, "PNG")
 print(f"✅ 已儲存：{output_path}  ({W}×{H} px)")
-
 ```
 
 
