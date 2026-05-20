@@ -67,8 +67,7 @@
 ### 環境安裝
 
 ```bash
-pip install pillow qrcode numpy scipy pandas scikit-learn \
-            requests beautifulsoup4 scrapy streamlit yfinance
+pip install pillow qrcode numpy scipy pandas scikit-learn requests beautifulsoup4 scrapy streamlit 
 ```
 
 ### 執行 Streamlit App
