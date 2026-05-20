@@ -1,5 +1,7 @@
 # 模組 1-1：Pillow (PIL) — 影像處理基礎
 
+<img width="1826" height="655" alt="image" src="https://github.com/user-attachments/assets/58146b1b-1919-4263-af1f-59772a856a76" />
+
 > **學習目標**：理解影像作為「數字矩陣」的本質，掌握工業影像前處理的核心技術。
 
 ---
