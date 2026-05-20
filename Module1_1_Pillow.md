@@ -137,7 +137,7 @@ draw_oil(355, 335, 20, 12)
 # ─────────────────────────────────────────────────────────────
 # 瑕疵標記框（虛線）
 # ─────────────────────────────────────────────────────────────
-'''
+
 def dashed_rect(d, x1, y1, x2, y2, color, dash=8, gap=4):
     for start, end in [(x1, x2)]:
         x = start
@@ -209,7 +209,7 @@ draw.line([(0, 24), (W, 24)], fill=(22, 30, 45), width=1)
 # ── 底部說明 ──────────────────────────────────────────────────
 footer = "IEM VISION LAB — SIMULATED AOI DEFECT IMAGE — FOR EDUCATIONAL USE ONLY"
 draw.text((10, H-18), footer, font=font_title, fill=(35, 48, 65))
-'''
+
 # ─────────────────────────────────────────────────────────────
 # 輸出
 # ─────────────────────────────────────────────────────────────
@@ -280,6 +280,17 @@ roi.save("part_roi.png")
 
 print("✅ 影像處理完成並儲存！")
 ```
+---
+
+<img width="800" height="600" alt="part_gray" src="https://github.com/user-attachments/assets/3d1fd39c-be8b-486d-b1c9-1eea78803c56" />
+
+---
+
+<img width="640" height="480" alt="part_small" src="https://github.com/user-attachments/assets/6c7ab64d-61f6-46e0-b6b6-702f0d60dc3c" />
+
+---
+
+<img width="600" height="450" alt="part_roi" src="https://github.com/user-attachments/assets/2c42d672-b451-4414-89d8-5a5acf824173" />
 
 ---
 
@@ -315,6 +326,10 @@ img_vivid = enhancer_color.enhance(1.8)
 img_high_contrast.save("high_contrast.png")
 img_sharp.save("sharpened.png")
 ```
+
+---
+
+<img width="800" height="600" alt="sharpened" src="https://github.com/user-attachments/assets/d809d4db-41f0-4a08-b7b6-9f5886812edd" />
 
 ---
 
@@ -369,6 +384,18 @@ print("✅ 濾鏡處理完成！")
 
 ---
 
+<img width="800" height="600" alt="contour" src="https://github.com/user-attachments/assets/66e1c2de-efb4-46d2-93a3-08a1dd3fbf92" />
+
+---
+
+<img width="800" height="600" alt="edges" src="https://github.com/user-attachments/assets/fd156862-a189-4199-b4aa-8b8e7f8dc85e" />
+
+---
+
+<img width="800" height="600" alt="emboss" src="https://github.com/user-attachments/assets/d3c25b2c-18b3-4142-a0ce-1c5e763d0608" />
+
+---
+
 ## 五、像素級操作（進階：手動操控每個像素）
 
 ```python
@@ -415,6 +442,18 @@ img_overlay.save("overlay.png")
 
 print("✅ 像素操作完成！")
 ```
+
+---
+
+<img width="800" height="600" alt="equalized" src="https://github.com/user-attachments/assets/ab727d72-b4fc-4750-a297-552315e24d39" />
+
+---
+
+<img width="800" height="600" alt="binary" src="https://github.com/user-attachments/assets/a7d2d9c8-e555-4337-843a-7f8fd8dfca93" />
+
+---
+
+<img width="800" height="600" alt="overlay" src="https://github.com/user-attachments/assets/bb6df6df-d47f-4892-934a-a9037eab050d" />
 
 ---
 
@@ -588,6 +627,14 @@ with st.expander("📚 學習筆記：各濾鏡的工業應用場景"):
 
 ---
 
+<img width="1830" height="831" alt="image" src="https://github.com/user-attachments/assets/d6f64994-7c3c-4691-b41c-3675b0e4d6bb" />
+
+---
+
+<img width="1824" height="890" alt="image" src="https://github.com/user-attachments/assets/9f1625e1-c3be-4357-a352-e9cc41a4c0bf" />
+
+---
+
 ## 七、課後練習
 
 ### 練習 1：批次影像處理腳本
@@ -674,6 +721,15 @@ Pillow 核心模組
 AOI 前處理標準流程
 原始圖 → 灰階 → 去雜訊 → 增強對比 → 邊緣偵測 → 閾值化 → 特徵擷取
 ```
+
+---
+
+### AOI自動檢測展示
+<img width="1830" height="571" alt="image" src="https://github.com/user-attachments/assets/4ef51eed-d591-4763-be11-ce37a9dd377b" />
+
+---
+
+<img width="1833" height="814" alt="image" src="https://github.com/user-attachments/assets/9b75f8f0-c2a8-4751-b4a1-8dbc75f056c3" />
 
 ---
 
