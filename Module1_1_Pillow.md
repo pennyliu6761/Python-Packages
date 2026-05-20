@@ -729,6 +729,10 @@ AOI 前處理標準流程
 
 ---
 
+<img width="1837" height="857" alt="image" src="https://github.com/user-attachments/assets/08066c86-837e-4870-9c35-e3897f205ba1" />
+
+---
+
 <img width="1833" height="814" alt="image" src="https://github.com/user-attachments/assets/9b75f8f0-c2a8-4751-b4a1-8dbc75f056c3" />
 
 ---
