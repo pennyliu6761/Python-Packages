@@ -364,7 +364,7 @@ img_emboss = img_gray.filter(ImageFilter.EMBOSS)
 # 4. 自訂卷積核（Convolution Kernel）
 # 水平邊緣偵測（Sobel 濾波器變形）
 horizontal_kernel = ImageFilter.Kernel(
-    size=3,                                  # 3x3 的卷積核
+    size=(3, 3),                                  # 3x3 的卷積核
     kernel=[
         -1, -2, -1,   # 第一列
          0,  0,  0,   # 第二列（中心）
