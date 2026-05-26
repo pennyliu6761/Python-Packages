@@ -60,6 +60,8 @@ print(f"平均值：{diameters.mean():.3f} mm")
 print(f"標準差：{diameters.std():.3f} mm")
 ```
 
+<img width="578" height="110" alt="image" src="https://github.com/user-attachments/assets/b1a56004-0c72-4ad9-bbc6-62f2c7dc7aec" />
+
 ---
 
 ## 二、陣列索引與切片（批次資料篩選）
@@ -95,6 +97,8 @@ print(f"不良品數：{nonconforming_mask.sum()}")
 print(f"不良率：{nonconforming_mask.mean() * 100:.2f}%")
 print(f"不良品出現在第幾個：{nonconforming_idx + 1}")  # +1 換成人類習慣的 1 開始計數
 ```
+
+<img width="578" height="148" alt="image" src="https://github.com/user-attachments/assets/c1a91347-fcff-414b-97b2-34e199e05e7b" />
 
 ---
 
@@ -136,6 +140,8 @@ machine_centered = machine_data - machine_means[:, np.newaxis]
 # ↑ machine_means[:, np.newaxis] 將形狀從 (3,) 擴展為 (3,1)，才能對 (3,5) 廣播
 print(f"\n校正後各機台平均（應接近 0）：{machine_centered.mean(axis=1).round(6)}")
 ```
+
+<img width="570" height="219" alt="image" src="https://github.com/user-attachments/assets/e8224cd0-be57-407b-bb90-2c4b85f4b25b" />
 
 ---
 
@@ -310,11 +316,20 @@ plt.show()
 print("✅ 管制圖已儲存為 control_chart.png")
 ```
 
+<img width="2087" height="1332" alt="control_chart" src="https://github.com/user-attachments/assets/b2653365-abb5-4524-ac25-5c770aef163e" />
+
 ---
 
 ## 五、NumPy 核心函式速查表
 
 ```python
+# -*- coding: utf-8 -*-
+"""
+Created on Tue May 26 21:02:11 2026
+
+@author: user
+"""
+
 import numpy as np
 
 # ===== 統計函式 =====
@@ -347,6 +362,13 @@ np.linalg.det(A)  # 行列式
 np.linalg.eig(A)  # 特徵值與特徵向量（PCA 分析基礎）
 
 # ===== 亂數生成（品質工程常用分配）=====
+mu=1.0
+sigma=0.2
+n=30
+low=10
+high=30
+lambda_=20
+
 np.random.seed(42)                         # 固定種子
 np.random.normal(mu, sigma, n)             # 正態分配（製程量測值）
 np.random.uniform(low, high, n)            # 均勻分配（模擬公差帶）
@@ -426,6 +448,8 @@ col2.metric("X-bar 失控點", f"{ooc.sum()} 個", delta=f"{'⚠️ 失控' if o
 col3.metric("估計 Cpk", f"{min((ucl_x - xbar), (xbar - lcl_x)) / (3 * sigma):.2f}")
 ```
 
+<img width="1527" height="694" alt="image" src="https://github.com/user-attachments/assets/645473d2-0514-4311-8048-7efbd63e5ca8" />
+
 ---
 
 ## 七、課後練習
@@ -460,6 +484,8 @@ print(f"標準差 σ = {sigma:.4f} mm")
 print(f"Cp       = {Cp:.3f}（≥ 1.33 為合格）")
 print(f"Cpk      = {Cpk:.3f}（≥ 1.33 為合格）")
 ```
+
+<img width="570" height="80" alt="image" src="https://github.com/user-attachments/assets/23d4542d-c518-46b8-9e1a-1f165c4928ed" />
 
 ### 練習 2：思考題
 
