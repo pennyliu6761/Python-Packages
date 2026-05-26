@@ -74,6 +74,9 @@ img.save("industrial_qr.png")
 print(f"✅ QR Code 已生成：{img.size}")  # 查看圖片尺寸
 ```
 
+<img width="410" height="410" alt="simple_qr" src="https://github.com/user-attachments/assets/dbe50b49-578e-48bd-95e3-cc944664937d" />
+<img width="530" height="530" alt="industrial_qr" src="https://github.com/user-attachments/assets/480522fc-b6d9-457a-a453-d052330de94d" />
+
 ---
 
 ## 三、結構化料件資訊編碼
@@ -127,6 +130,8 @@ img = generate_part_qr(
 )
 img.save("part_label_qr.png")
 ```
+
+<img width="616" height="616" alt="part_label_qr" src="https://github.com/user-attachments/assets/d2eb237c-590f-4f2d-b07f-daf13f13e88f" />
 
 ---
 
@@ -185,11 +190,13 @@ def generate_branded_qr(data: str, logo_path: str, output_path: str,
 
 # 使用（需要準備一張 logo.png 圖片）
 generate_branded_qr(
-    data="https://warehouse.company.com/part/M-BOLT-M8-316",
+    data="https://iem.nqu.edu.tw/",
     logo_path="company_logo.png",
     output_path="branded_label.png"
 )
 ```
+
+<img width="444" height="444" alt="branded_label" src="https://github.com/user-attachments/assets/ae629995-d056-4e19-b122-3f895e2cc812" />
 
 ---
 
@@ -282,6 +289,8 @@ label_img.save("warehouse_label.png", dpi=(300, 300))
 print("✅ 倉儲標籤已生成！")
 ```
 
+<img width="600" height="400" alt="warehouse_label" src="https://github.com/user-attachments/assets/16ea9420-f76a-42cc-bedc-8b75bfa2aa01" />
+
 ---
 
 ## 六、🖥️ Streamlit 應用：智慧倉儲標籤產生器
@@ -368,7 +377,7 @@ if submitted:
     )
     qr.add_data(qr_content)
     qr.make(fit=True)
-    qr_img = qr.make_image(fill_color=qr_color, back_color="white")
+    qr_img = qr.make_image(fill_color=qr_color, back_color="white").convert("RGB")
 
     # 顯示結果
     col_a, col_b = st.columns([1, 2])
@@ -380,6 +389,7 @@ if submitted:
         # 下載 QR Code 圖片
         buf = io.BytesIO()
         qr_img.save(buf, format="PNG")
+        buf.seek(0)
         st.download_button(
             "⬇️ 下載 QR Code",
             data=buf.getvalue(),
@@ -429,6 +439,9 @@ if submitted:
         """)
 ```
 
+<img width="1768" height="840" alt="image" src="https://github.com/user-attachments/assets/023101ac-9091-4124-9062-8a4de03575c1" />
+<img width="1773" height="890" alt="image" src="https://github.com/user-attachments/assets/42669651-f3ad-4bce-a906-acd370f3024d" />
+
 ---
 
 ## 七、課後練習
@@ -436,38 +449,314 @@ if submitted:
 ### 練習 1：批次生成多張標籤
 
 ```python
+# 檔案名稱：app_qr.py
+# 執行方式：streamlit run app_qr.py
+
+import streamlit as st
 import qrcode
+from PIL import Image, ImageDraw, ImageFont
+import json
+import io
 import csv
-from PIL import Image
+from datetime import datetime, date
 
-# 從 CSV 批次讀取料件清單並生成 QR Code
-# inventory.csv 的格式：part_no, qty, location, batch
+st.set_page_config(page_title="智慧倉儲標籤產生器", page_icon="🏭", layout="wide")
 
-def batch_generate_labels(csv_path: str, output_folder: str):
-    """從 CSV 清單批次生成 QR Code 標籤"""
-    import os
-    os.makedirs(output_folder, exist_ok=True)
+st.title("🏭 智慧倉儲 QR Code 標籤產生器")
+st.markdown("填寫料件資訊，即時生成帶有完整資訊的 QR Code 標籤。")
 
-    with open(csv_path, newline='', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        for i, row in enumerate(reader):
-            qr = qrcode.QRCode(
-                error_correction=qrcode.constants.ERROR_CORRECT_H,
-                box_size=8, border=4
-            )
-            content = (f"PN:{row['part_no']}|QT:{row['qty']}|"
-                       f"BT:{row['batch']}|LC:{row['location']}")
-            qr.add_data(content)
-            qr.make(fit=True)
-            img = qr.make_image()
-            
-            filename = f"{output_folder}/label_{i+1}_{row['part_no']}.png"
-            img.save(filename)
-            print(f"✅ 已生成：{filename}")
+# ── 虛擬資料 ──────────────────────────────────────────────────────────────────
+MOCK_ROWS = [
+    {"part_no": "M-BOLT-M8-316L",    "description": "Bolt M8x20 SUS316L",     "qty": 500,  "unit": "PCS", "batch": "B20240115", "location": "A-01-02-03", "supplier": "台灣緊固件",  "inbound_date": "20240115"},
+    {"part_no": "M-NUT-M8-304",      "description": "Nut M8 SUS304",          "qty": 500,  "unit": "PCS", "batch": "B20240115", "location": "A-01-02-04", "supplier": "台灣緊固件",  "inbound_date": "20240115"},
+    {"part_no": "P-PIPE-DN50-SS",    "description": "Pipe DN50 Stainless",    "qty": 20,   "unit": "M",   "batch": "B20240117", "location": "B-02-01-01", "supplier": "聯鋼管材",    "inbound_date": "20240117"},
+    {"part_no": "V-VALVE-DN50-CF8",  "description": "Gate Valve DN50 CF8",   "qty": 5,    "unit": "PCS", "batch": "B20240117", "location": "B-02-01-02", "supplier": "金門閥件",    "inbound_date": "20240117"},
+    {"part_no": "B-BEARING-6204-ZZ", "description": "Deep Groove Bearing ZZ", "qty": 30,  "unit": "PCS", "batch": "B20240119", "location": "C-03-02-01", "supplier": "NSK 代理商",  "inbound_date": "20240119"},
+]
+CSV_COLUMNS = ["part_no", "description", "qty", "unit", "batch", "location", "supplier", "inbound_date"]
 
-# 呼叫
-batch_generate_labels("inventory.csv", "labels_output")
+
+def make_csv_bytes(rows: list[dict]) -> bytes:
+    """把 dict 列表序列化為 CSV bytes（UTF-8 BOM，Excel 可直接開啟）"""
+    buf = io.StringIO()
+    writer = csv.DictWriter(buf, fieldnames=CSV_COLUMNS)
+    writer.writeheader()
+    writer.writerows(rows)
+    return buf.getvalue().encode("utf-8-sig")   # BOM 讓 Excel 正確顯示中文
+
+
+def parse_csv_bytes(raw: bytes) -> list[dict]:
+    """把上傳的 CSV bytes 解析為 dict 列表，自動處理 BOM"""
+    text = raw.decode("utf-8-sig")
+    reader = csv.DictReader(io.StringIO(text))
+    rows = []
+    for r in reader:
+        r["qty"] = int(r.get("qty", 0))
+        rows.append(r)
+    return rows
+
+
+def build_qr_content(row: dict, include_json: bool, url_prefix: str) -> str:
+    if url_prefix:
+        return f"{url_prefix}{row['part_no']}"
+    if include_json:
+        return json.dumps({
+            "PN": row["part_no"], "DS": row["description"],
+            "QT": row["qty"],     "UT": row["unit"],
+            "BT": row["batch"],   "LC": row["location"],
+            "SP": row["supplier"],"DT": row["inbound_date"], "VR": "1.0"
+        }, ensure_ascii=False, separators=(',', ':'))
+    return (f"PN:{row['part_no']}|QT:{row['qty']}{row['unit']}|"
+            f"BT:{row['batch']}|LC:{row['location']}")
+
+
+def make_qr_image(content: str, ec_const, color: str) -> Image.Image:
+    qr = qrcode.QRCode(error_correction=ec_const, box_size=10, border=4)
+    qr.add_data(content)
+    qr.make(fit=True)
+    return qr.make_image(fill_color=color, back_color="white").convert("RGB")
+
+
+def img_to_png_bytes(img: Image.Image) -> bytes:
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    buf.seek(0)
+    return buf.getvalue()
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 頁籤：① 單筆手動輸入  ② 批次 CSV
+# ─────────────────────────────────────────────────────────────────────────────
+tab_manual, tab_batch = st.tabs(["✏️ 單筆輸入", "📂 批次 CSV"])
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 頁籤 ①：單筆手動輸入（原有功能，完整保留）
+# ══════════════════════════════════════════════════════════════════════════════
+with tab_manual:
+    with st.form("label_form"):
+        st.subheader("📋 料件資訊")
+        col1, col2 = st.columns(2)
+        with col1:
+            part_no     = st.text_input("料號 (Part Number) *", value="M-BOLT-M8-316L")
+            description = st.text_input("品名 *", value="Bolt M8x20 SUS316L")
+            supplier    = st.text_input("供應商", value="台灣緊固件")
+            qty         = st.number_input("數量 *", min_value=1, value=500)
+        with col2:
+            batch        = st.text_input("批次號 *", value="B2024011501")
+            location     = st.text_input("儲位", value="A-03-02-04")
+            inbound_date = st.date_input("入庫日期", value=date.today())
+            unit         = st.selectbox("單位", ["PCS", "KG", "BOX", "ROLL", "M"])
+
+        st.subheader("⚙️ QR Code 設定")
+        col3, col4 = st.columns(2)
+        with col3:
+            error_level = st.select_slider("糾錯等級",
+                options=["L (7%)", "M (15%)", "Q (25%)", "H (30%)"], value="H (30%)")
+            qr_color = st.color_picker("QR Code 顏色", "#000000")
+        with col4:
+            include_json = st.checkbox("編碼為 JSON 格式", value=True)
+            add_url      = st.text_input("系統連結 URL（選填）",
+                placeholder="https://wms.company.com/part/")
+
+        submitted = st.form_submit_button("🔨 生成標籤", type="primary")
+
+    if submitted:
+        ec_map = {"L (7%)": qrcode.constants.ERROR_CORRECT_L,
+                  "M (15%)": qrcode.constants.ERROR_CORRECT_M,
+                  "Q (25%)": qrcode.constants.ERROR_CORRECT_Q,
+                  "H (30%)": qrcode.constants.ERROR_CORRECT_H}
+        row = {"part_no": part_no, "description": description,
+               "qty": qty, "unit": unit, "batch": batch,
+               "location": location, "supplier": supplier,
+               "inbound_date": inbound_date.strftime("%Y%m%d")}
+        qr_content = build_qr_content(row, include_json, add_url)
+        qr_img = make_qr_image(qr_content, ec_map[error_level], qr_color)
+
+        col_a, col_b = st.columns([1, 2])
+        with col_a:
+            st.subheader("📲 生成的 QR Code")
+            st.image(qr_img, width=300)
+            st.download_button("⬇️ 下載 QR Code", data=img_to_png_bytes(qr_img),
+                               file_name=f"qr_{part_no}.png", mime="image/png")
+        with col_b:
+            st.subheader("📋 標籤預覽")
+            st.markdown(f"""
+| 欄位 | 內容 |
+|------|------|
+| **料號** | `{part_no}` |
+| **品名** | {description} |
+| **數量** | {qty} {unit} |
+| **批次** | {batch} |
+| **儲位** | {location} |
+| **供應商** | {supplier} |
+| **入庫日期** | {inbound_date} |
+""")
+            st.subheader("🔍 QR Code 編碼內容")
+            st.code(qr_content, language="json" if include_json else "text")
+        st.success("✅ 標籤生成成功！")
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 頁籤 ②：批次 CSV
+# ══════════════════════════════════════════════════════════════════════════════
+with tab_batch:
+
+    # ── A. 產生虛擬 CSV ───────────────────────────────────────────────────────
+    st.subheader("① 取得 CSV 範本")
+    st.caption("下載後可直接用 Excel 編輯，再上傳到下方。")
+    st.download_button(
+        label="⬇️ 下載 5 筆虛擬資料 CSV",
+        data=make_csv_bytes(MOCK_ROWS),
+        file_name="inventory_sample.csv",
+        mime="text/csv",
+    )
+
+    st.divider()
+
+    # ── B. 上傳 CSV ───────────────────────────────────────────────────────────
+    st.subheader("② 上傳 CSV 檔案")
+    uploaded = st.file_uploader("選擇 CSV 檔（欄位：" + "、".join(CSV_COLUMNS) + "）",
+                                 type=["csv"])
+
+    # 若沒有上傳，預設用虛擬資料讓介面可以操作
+    if uploaded is not None:
+        raw_bytes = uploaded.read()
+        try:
+            rows = parse_csv_bytes(raw_bytes)
+            st.success(f"✅ 已載入 {len(rows)} 筆資料")
+        except Exception as e:
+            st.error(f"CSV 解析失敗：{e}")
+            rows = []
+    else:
+        rows = MOCK_ROWS.copy()
+        st.info("尚未上傳 CSV，目前顯示 5 筆虛擬資料供預覽。")
+
+    if not rows:
+        st.stop()
+
+    st.divider()
+
+    # ── C. 選取品項 ───────────────────────────────────────────────────────────
+    st.subheader("③ 選取要製作 QR Code 的品項")
+
+    # 顯示資料表，讓使用者勾選
+    import pandas as pd
+    df = pd.DataFrame(rows)
+
+    # 多選：用 multiselect 讓使用者挑選 part_no + batch 組合
+    options = [f"{r['part_no']}  ▸  批次 {r['batch']}" for r in rows]
+    selected = st.multiselect(
+        "選擇品項（可多選）",
+        options=options,
+        default=options,          # 預設全選
+        help="按住 Ctrl 可多選，或直接點選清單中的項目"
+    )
+
+    # 顯示對應資料表（選到哪些就顯示哪些）
+    selected_idx = [i for i, o in enumerate(options) if o in selected]
+    selected_rows = [rows[i] for i in selected_idx]
+
+    if selected_rows:
+        st.dataframe(
+            pd.DataFrame(selected_rows),
+            use_container_width=True,
+            hide_index=True,
+        )
+    else:
+        st.warning("請至少選擇一個品項。")
+        st.stop()
+
+    st.divider()
+
+    # ── D. QR Code 設定 ───────────────────────────────────────────────────────
+    st.subheader("④ QR Code 設定")
+    bc1, bc2, bc3 = st.columns(3)
+    with bc1:
+        b_error = st.select_slider("糾錯等級",
+            options=["L (7%)", "M (15%)", "Q (25%)", "H (30%)"], value="H (30%)",
+            key="batch_ec")
+    with bc2:
+        b_color = st.color_picker("QR Code 顏色", "#000000", key="batch_color")
+    with bc3:
+        b_json  = st.checkbox("編碼為 JSON 格式", value=True, key="batch_json")
+    b_url = st.text_input("系統連結 URL（選填）", placeholder="https://wms.company.com/part/",
+                           key="batch_url")
+
+    st.divider()
+
+    # ── E. 生成並下載 ─────────────────────────────────────────────────────────
+    st.subheader("⑤ 生成 QR Code")
+
+    ec_map = {"L (7%)": qrcode.constants.ERROR_CORRECT_L,
+              "M (15%)": qrcode.constants.ERROR_CORRECT_M,
+              "Q (25%)": qrcode.constants.ERROR_CORRECT_Q,
+              "H (30%)": qrcode.constants.ERROR_CORRECT_H}
+
+    if st.button("🔨 批次生成所有選取品項", type="primary"):
+        progress = st.progress(0, text="生成中…")
+        results = []   # list of (filename, png_bytes)
+
+        for idx, row in enumerate(selected_rows):
+            content = build_qr_content(row, b_json, b_url)
+            img     = make_qr_image(content, ec_map[b_error], b_color)
+            fname   = f"qr_{row['part_no']}_{row['batch']}.png"
+            results.append((fname, img_to_png_bytes(img), img, row, content))
+            progress.progress((idx + 1) / len(selected_rows),
+                              text=f"已生成 {idx+1}/{len(selected_rows)}：{row['part_no']}")
+
+        progress.empty()
+        st.success(f"✅ 共生成 {len(results)} 張 QR Code")
+
+        # 個別預覽 + 下載
+        cols_per_row = 3
+        for chunk_start in range(0, len(results), cols_per_row):
+            chunk = results[chunk_start:chunk_start + cols_per_row]
+            cols  = st.columns(cols_per_row)
+            for col, (fname, png_bytes, img, row, content) in zip(cols, chunk):
+                with col:
+                    st.image(img, width=160)
+                    st.caption(f"**{row['part_no']}**  \n批次 {row['batch']}")
+                    st.download_button(
+                        label="⬇️ 下載",
+                        data=png_bytes,
+                        file_name=fname,
+                        mime="image/png",
+                        key=fname,         # 每個按鈕需要唯一 key
+                    )
+
+        # 打包成 ZIP 一次下載全部
+        import zipfile
+        zip_buf = io.BytesIO()
+        with zipfile.ZipFile(zip_buf, "w", zipfile.ZIP_DEFLATED) as zf:
+            for fname, png_bytes, *_ in results:
+                zf.writestr(fname, png_bytes)
+        zip_buf.seek(0)
+        st.download_button(
+            label=f"📦 下載全部 {len(results)} 張（ZIP）",
+            data=zip_buf.getvalue(),
+            file_name="qr_labels.zip",
+            mime="application/zip",
+        )
+
+    with st.expander("💡 CSV 欄位說明"):
+        st.markdown("""
+| 欄位 | 說明 | 範例 |
+|------|------|------|
+| `part_no` | 料號 | M-BOLT-M8-316L |
+| `description` | 品名 | Bolt M8x20 SUS316L |
+| `qty` | 數量（整數） | 500 |
+| `unit` | 單位 | PCS / KG / BOX / M |
+| `batch` | 批次號 | B20240115 |
+| `location` | 儲位 | A-01-02-03 |
+| `supplier` | 供應商 | 台灣緊固件 |
+| `inbound_date` | 入庫日期（YYYYMMDD） | 20240115 |
+""")
 ```
+
+<img width="1775" height="658" alt="image" src="https://github.com/user-attachments/assets/eaf803ab-a9c9-43f4-b289-3755b49bdd38" />
+<img width="1753" height="734" alt="image" src="https://github.com/user-attachments/assets/5967c4d8-3cb3-4466-be39-642ad857c7cc" />
+<img width="1755" height="813" alt="image" src="https://github.com/user-attachments/assets/98beac85-433c-4e66-a2e2-25e89762c0d6" />
 
 ### 練習 2：思考題
 
