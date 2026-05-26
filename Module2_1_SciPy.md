@@ -46,6 +46,8 @@ pip install scipy matplotlib numpy streamlit
 ────────────────────────────────────────
 ```
 
+<img width="566" height="206" alt="image" src="https://github.com/user-attachments/assets/09e912bf-bd50-4590-9530-a299fc678c66" />
+
 ---
 
 ## 二、SciPy 求解 LP 的方法
@@ -109,6 +111,8 @@ print(f"  原料使用：{4*x1 + 2*x2:.1f} / 16 kg")
 print("=" * 45)
 ```
 
+<img width="579" height="209" alt="image" src="https://github.com/user-attachments/assets/d2c408c3-4e8a-46e5-a50c-6ecefb7f66f5" />
+
 ---
 
 ## 三、可行解區域視覺化
@@ -165,7 +169,7 @@ def plot_feasible_region(profits, time_limit, material_limit,
     ax.fill_between(x1_fill, 0, x2_upper,
                     where=(x2_upper >= 0),
                     alpha=0.25, color='green',
-                    label='✅ 可行解區域（Feasible Region）')
+                    label='可行解區域（Feasible Region）')
 
     # ===== 標示頂點（Vertex）=====
     # 頂點是最佳解的候選點
@@ -238,7 +242,7 @@ def plot_feasible_region(profits, time_limit, material_limit,
     ax.grid(True, alpha=0.3, linestyle=':')
 
     # 標注最佳解
-    ax.annotate(f'⭐ 最佳解\nx₁={best_vertex[0]:.1f}, x₂={best_vertex[1]:.1f}\n利潤={z_opt:.1f} 萬',
+    ax.annotate(f'最佳解\nx₁={best_vertex[0]:.1f}, x₂={best_vertex[1]:.1f}\n利潤={z_opt:.1f} 萬',
                 xy=best_vertex,
                 xytext=(best_vertex[0] + 0.5, best_vertex[1] + 0.5),
                 fontsize=11, color='#e74c3c', fontweight='bold',
@@ -259,6 +263,8 @@ fig, opt_x, opt_z = plot_feasible_region(
 plt.savefig('feasible_region.png', dpi=150, bbox_inches='tight')
 plt.show()
 ```
+
+<img width="1483" height="1182" alt="feasible_region" src="https://github.com/user-attachments/assets/e2d88bd5-96c0-48a0-b382-42498feb55af" />
 
 ---
 
@@ -322,6 +328,8 @@ plt.savefig('sensitivity.png', dpi=150, bbox_inches='tight')
 plt.show()
 print("✅ 敏感度分析圖已儲存！")
 ```
+
+<img width="1490" height="1477" alt="sensitivity" src="https://github.com/user-attachments/assets/cae8642a-f4a8-44da-affd-007fd17cf66f" />
 
 ---
 
@@ -443,6 +451,8 @@ with col2:
         st.error("❌ 求解失敗：可能是限制條件互相矛盾，請調整參數。")
 ```
 
+<img width="1620" height="867" alt="image" src="https://github.com/user-attachments/assets/f991bc7a-2c4c-4f15-8c82-d9807bf12b1f" />
+
 ---
 
 ## 六、延伸：多限制條件 LP（更複雜的工廠情境）
@@ -478,6 +488,8 @@ if result.success:
         print(f"  產品 {prod}：{qty:.2f} 件")
     print(f"最大利潤：{-result.fun:.2f} 萬元")
 ```
+
+<img width="538" height="110" alt="image" src="https://github.com/user-attachments/assets/e8e1ff93-8261-49ee-917a-c874414fbafd" />
 
 ---
 
