@@ -108,6 +108,8 @@ new_scaled   = scaler_std.transform(new_supplier)  # 只用 transform！
 print(f"\n新供應商標準化後：{new_scaled.round(3)}")
 ```
 
+<img width="562" height="209" alt="image" src="https://github.com/user-attachments/assets/a05a4f2b-796c-46f0-8f1c-f33d208462bf" />
+
 ---
 
 ## 四、K-Means 分群實作
@@ -265,6 +267,9 @@ plt.show()
 print("✅ 分群結果已儲存！")
 ```
 
+<img width="556" height="154" alt="image" src="https://github.com/user-attachments/assets/57727ff6-cb6d-4fa6-9564-d00a9822fcec" />
+<img width="570" height="251" alt="image" src="https://github.com/user-attachments/assets/0df39ee8-b672-455b-ad8c-38d40eb20bb0" />
+
 ---
 
 ## 五、分群品質評估
@@ -298,6 +303,8 @@ print(f"\n最佳 K 值：{best_k[0]}（輪廓係數 = {best_k[1]:.3f}）")
 ch_score = calinski_harabasz_score(X_scaled, kmeans.labels_)
 print(f"\nCH 指數：{ch_score:.1f}")
 ```
+
+<img width="559" height="214" alt="image" src="https://github.com/user-attachments/assets/18160744-cc2d-4bfb-80d0-53ec8a4dcc69" />
 
 ---
 
@@ -428,6 +435,9 @@ if show_elbow:
     st.pyplot(fig2)
 ```
 
+<img width="1837" height="834" alt="image" src="https://github.com/user-attachments/assets/323435a3-8b72-404b-9a2c-e5ed9ae12c51" />
+<img width="1837" height="837" alt="image" src="https://github.com/user-attachments/assets/fb4c3b43-f6e3-4768-906b-e7333c865d93" />
+
 ---
 
 ## 七、延伸：監督式學習快速預覽
@@ -475,6 +485,8 @@ importances   = rf.feature_importances_
 for name, imp in sorted(zip(feature_names, importances), key=lambda x: -x[1]):
     print(f"  {name}：{imp:.3f} {'█' * int(imp * 30)}")
 ```
+
+<img width="574" height="264" alt="image" src="https://github.com/user-attachments/assets/7faf5c40-eaa5-47f0-b218-79eb9399671e" />
 
 ---
 
