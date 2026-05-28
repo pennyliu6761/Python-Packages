@@ -75,6 +75,8 @@ print("\n加入 OEE 指標後：")
 print(df[['機台', '稼動率', '良率']].round(3))
 ```
 
+<img width="568" height="133" alt="image" src="https://github.com/user-attachments/assets/a84acc55-d4c1-4e95-b42a-55498c646cd0" />
+
 ---
 
 ## 二、資料清理（Data Cleaning）
@@ -128,6 +130,9 @@ print("\n清理後的乾淨數據：")
 print(df)
 print(f"\n清理後缺失值：\n{df.isnull().sum()}")
 ```
+
+<img width="568" height="255" alt="image" src="https://github.com/user-attachments/assets/829d99e0-54d5-4d06-90a7-c91dec35edbf" />
+<img width="573" height="256" alt="image" src="https://github.com/user-attachments/assets/d6eef394-1118-4441-b916-1ff5ac9df7ae" />
 
 ---
 
@@ -197,6 +202,10 @@ print("\n⚠️ OEE 最差的 5 個事件：")
 print(worst_days)
 ```
 
+<img width="566" height="276" alt="image" src="https://github.com/user-attachments/assets/cabf06e5-e02b-4339-a3ac-ee9e04949d77" />
+<img width="566" height="248" alt="image" src="https://github.com/user-attachments/assets/a670cd0a-75b7-418e-bb5f-9feda751a688" />
+<img width="567" height="113" alt="image" src="https://github.com/user-attachments/assets/411314bb-d407-443d-a9cc-112061df23db" />
+
 ---
 
 ## 四、時間序列分析（Time Series）
@@ -238,6 +247,8 @@ plt.tight_layout()
 plt.savefig('oee_trend.png', dpi=150)
 plt.show()
 ```
+
+<img width="1713" height="705" alt="image" src="https://github.com/user-attachments/assets/0b09e64d-8b9a-422e-8da4-29f3b4357eaa" />
 
 ---
 
@@ -403,6 +414,8 @@ st.download_button("⬇️ 下載篩選資料 CSV",
                    file_name='oee_report.csv',
                    mime='text/csv')
 ```
+
+<img width="1842" height="898" alt="image" src="https://github.com/user-attachments/assets/8caa7be7-b0fa-4d3a-abd4-dc53c35cd1cf" />
 
 ---
 
