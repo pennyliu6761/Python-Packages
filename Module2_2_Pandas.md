@@ -499,6 +499,8 @@ print(cumulative_pct)
 # 在此完成帕雷托圖繪製...
 ```
 
+<img width="1485" height="886" alt="pareto_chart" src="https://github.com/user-attachments/assets/b6f84a8c-032c-4038-911d-da4e94448e75" />
+
 ### 練習 2：思考題
 
 1. OEE 低的原因可以是稼動率低、效能率低、或良率低，**三者的改善策略**有何不同？各對應什麼工廠問題？
