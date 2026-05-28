@@ -8,7 +8,7 @@
 
 製造業的資料 90% 以「表格」形式存在——機台報工、品質記錄、物料清單（BOM）、採購訂單。Pandas 是 Python 中最強大的**表格資料分析工具**，掌握 Pandas 等於掌握了工廠數據的「通用語言」。
 
-**OEE（Overall Equipment Effectiveness，設備綜合效率）**是智慧製造的核心 KPI，由三個指標構成：
+**OEE（Overall Equipment Effectiveness，設備綜合效率）** 是智慧製造的核心 KPI，由三個指標構成：
 
 ```
 OEE = 稼動率 × 效能率 × 良率
